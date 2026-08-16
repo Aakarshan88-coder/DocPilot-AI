@@ -21,6 +21,7 @@ def create_document(
 
     return new_document
 
+
 def get_user_documents(
     db: Session,
     user_id: int
@@ -28,3 +29,33 @@ def get_user_documents(
     return db.query(Document).filter(
         Document.user_id == user_id
     ).all()
+
+
+def get_user_document(
+    db: Session,
+    document_id: int,
+    user_id: int
+):
+    return db.query(Document).filter(
+        Document.id == document_id,
+        Document.user_id == user_id
+    ).first()
+
+
+def delete_document(
+    db: Session,
+    document_id: int,
+    user_id: int
+):
+    document = db.query(Document).filter(
+        Document.id == document_id,
+        Document.user_id == user_id
+    ).first()
+
+    if not document:
+        return None
+
+    db.delete(document)
+    db.commit()
+
+    return document
