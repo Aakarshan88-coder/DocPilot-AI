@@ -126,7 +126,6 @@ function Chat() {
 
     setActiveChatId(chatId);
     setMessages(chat.messages || []);
-    setMessages([]);
     setQuestion("");
   };
 

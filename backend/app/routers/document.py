@@ -221,6 +221,15 @@ def upload_document(
             if page["text"]
         )
 
+        if not text.strip():
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "No readable text found in this PDF. "
+                    "Scanned PDFs require OCR before they can be searched."
+                )
+            )
+
 
         # =========================
         # 13. Create chunks

@@ -10,10 +10,6 @@ client = genai.Client(
 
 
 def generate_answer(question, context):
-
-    print("DEBUG CONTEXT:", context)
-    print("DEBUG QUESTION:", question)
-
     prompt = f"""
 You are DocPilot-AI, an AI document assistant.
 
@@ -38,22 +34,16 @@ Answer:
             contents=prompt
         )
 
-        print("DEBUG GEMINI:", response.text)
-
         return response.text
 
     except errors.ClientError as error:
 
         if error.code == 429:
 
-            print("DEBUG GEMINI QUOTA: Rate limit or quota exceeded")
-
             return (
                 "AI service quota is temporarily exhausted. "
                 "Please try again later."
             )
-
-        print("DEBUG GEMINI ERROR:", error)
 
         return (
             "The AI service is temporarily unavailable. "
@@ -61,8 +51,6 @@ Answer:
         )
 
     except Exception as error:
-
-        print("DEBUG GEMINI ERROR:", error)
 
         return (
             "Something went wrong while generating the AI response."
