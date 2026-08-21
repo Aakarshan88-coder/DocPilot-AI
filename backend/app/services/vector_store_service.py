@@ -85,7 +85,9 @@ def add_embedding(
     embedding,
     document_id,
     user_id,
-    chunk
+    chunk,
+    page_number=None,
+    chunk_index=None
 ):
 
     vector = np.array(
@@ -98,7 +100,9 @@ def add_embedding(
     metadata.append({
         "document_id": document_id,
         "user_id": user_id,
-        "chunk": chunk
+        "chunk": chunk,
+        "page_number": page_number,
+        "chunk_index": chunk_index,
     })
 
     save_vector_store()
@@ -127,12 +131,12 @@ def search_similar(
 
     distances, indices = index.search(
         vector,
-        min(top_k, index.ntotal)
+        min(index.ntotal, len(metadata))
     )
 
     results = []
 
-    for i in indices[0]:
+    for distance, i in zip(distances[0], indices[0]):
 
         if i == -1:
             continue
@@ -143,7 +147,13 @@ def search_similar(
             item["user_id"] == user_id
             and item["document_id"] == document_id
         ):
-            results.append(item)
+            results.append({
+                **item,
+                "distance": float(distance),
+            })
+
+            if len(results) == top_k:
+                break
 
     return results
 

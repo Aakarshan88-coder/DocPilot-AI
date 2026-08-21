@@ -8,6 +8,7 @@ from slowapi.errors import RateLimitExceeded
 from app.database.database import Base, engine
 from app.models.user import User
 from app.models.document import Document
+from app.models.chat import ChatSession, ChatMessage
 
 from app.routers.auth import router as auth_router
 from app.routers.document import router as document_router

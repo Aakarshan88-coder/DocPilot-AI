@@ -14,7 +14,7 @@ from app.services.document_service import (
     get_user_documents,
     delete_document
 )
-from app.services.pdf_service import extract_text_from_pdf
+from app.services.pdf_service import extract_pages_from_pdf
 from app.services.embedding_service import create_embedding
 from app.services.vector_store_service import (
     add_embedding,
@@ -211,8 +211,14 @@ def upload_document(
         # 12. Extract PDF text
         # =========================
 
-        text = extract_text_from_pdf(
+        pages = extract_pages_from_pdf(
             file_path
+        )
+
+        text = "\n".join(
+            page["text"]
+            for page in pages
+            if page["text"]
         )
 
 
@@ -220,27 +226,33 @@ def upload_document(
         # 13. Create chunks
         # =========================
 
-        chunks = create_chunks(
-            text
-        )
+        chunks = []
 
 
         # =========================
         # 14. Create embeddings
         # =========================
 
-        for chunk in chunks:
-
-            embedding = create_embedding(
-                chunk
+        for page in pages:
+            page_chunks = create_chunks(
+                page["text"]
             )
 
-            add_embedding(
-                embedding=embedding,
-                document_id=document.id,
-                user_id=current_user.id,
-                chunk=chunk
-            )
+            for chunk_index, chunk in enumerate(page_chunks):
+                chunks.append(chunk)
+
+                embedding = create_embedding(
+                    chunk
+                )
+
+                add_embedding(
+                    embedding=embedding,
+                    document_id=document.id,
+                    user_id=current_user.id,
+                    chunk=chunk,
+                    page_number=page["page_number"],
+                    chunk_index=chunk_index
+                )
 
 
         # =========================
