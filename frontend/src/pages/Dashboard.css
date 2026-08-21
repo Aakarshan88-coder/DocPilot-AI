@@ -1019,3 +1019,18 @@ css
 
 }
 
+.logout-button {
+  padding: 10px 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}

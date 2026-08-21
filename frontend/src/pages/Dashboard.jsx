@@ -5,7 +5,10 @@ import "./Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
-
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  navigate("/login");
+};
   const [user, setUser] = useState(null);
 
   const [file, setFile] = useState(null);
@@ -242,7 +245,9 @@ function Dashboard() {
         >
           Open AI Chat
         </button>
-
+      <button className="logout-button" onClick={handleLogout}>
+       Logout
+      </button>
       </header>
 
 
